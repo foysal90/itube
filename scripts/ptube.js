@@ -15,7 +15,32 @@ const loadVideos = () => {
     .catch((error) => console.log(error));
 };
 
-// const cardDemo =
+//time format
+const timeFormat = (time) => {
+  const hour = parseInt(time / 3600);
+  let remainingSec = time % 3600;
+  const minute = parseInt(remainingSec / 60);
+  remainingSec %= 60;
+  return `${hour} hours ${minute} minutes ${remainingSec} seconds ago`;
+};
+// const timeFormat = (time) => {
+//     const years = Math.floor(time / (3600 * 24 * 365));
+//     let remainingTime = time % (3600 * 24 * 365);
+    
+//     const months = Math.floor(remainingTime / (3600 * 24 * 30));
+//     remainingTime %= (3600 * 24 * 30);
+    
+//     const days = Math.floor(remainingTime / (3600 * 24));
+//     remainingTime %= (3600 * 24);
+    
+//     const hours = Math.floor(remainingTime / 3600);
+//     remainingTime %= 3600;
+    
+//     const minutes = Math.floor(remainingTime / 60);
+//     const seconds = remainingTime % 60;
+  
+//     return `${years} year ${months} month ${days} day ${hours} hour ${minutes} minute ${seconds} second ago`;
+//   };
 
 //display video
 const displayVideos = (videos) => {
@@ -30,7 +55,16 @@ const displayVideos = (videos) => {
       class="w-full h-full object-cover"
       src=${video.thumbnail}
       alt="thumbnail" />
-      <p class='absolute text-2xl bg-black rounded p-1 m-1 text-white bottom-2 right-2'>${video.others.posted_date}</p>
+      ${
+        video.others.posted_date?.length == 0
+          ? ""
+          : `
+         <span class='absolute  bg-black rounded p-1 m-1 text-white bottom-2 right-2'>${timeFormat(
+           video.others.posted_date
+         )}</span> 
+        `
+      }
+      
   </figure>
   <div class="px-0 py-2 flex gap-2">
        <div>
