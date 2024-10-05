@@ -33,6 +33,25 @@ const loadVideos = () => {
     .catch((error) => console.log(error));
 };
 
+const loadVideoDetails = async (videoId) => {
+  const uri = `https://openapi.programming-hero.com/api/phero-tube/video/${videoId}`;
+  const res = await fetch(uri);
+  const data = await res.json();
+  displayDetails(data.video);
+};
+
+//display video details
+const displayDetails = (video) => {
+  console.log(video);
+  const detailsContainer = document.getElementById("modal-content");
+  detailsContainer.innerHTML = `
+  <img class='my-5' src=${video.thumbnail} />
+  <h2 class='my-2' >Title: <span class='text-2xl font-bold'>${video.title}</span></h2>
+  <p>${video.description}</p>
+  `;
+  document.getElementById("showModal").click();
+};
+
 //time format
 const timeFormat = (time) => {
   const hour = parseInt(time / 3600);
@@ -79,7 +98,6 @@ const displayVideos = (videos) => {
   }
 
   videos.forEach((video) => {
-    console.log(video);
     const card = document.createElement("div");
     card.classList = "card card-compact";
     card.innerHTML = `
@@ -122,9 +140,16 @@ const displayVideos = (videos) => {
        </div>
        
        <p>${video.others.views} views</p>
+        <p>
+       <button onclick="loadVideoDetails('${
+         video.video_id
+       }')" class="btn btn-sm btn-error my-2">Details</button>
+       </p>
 
        </div>
+      
   </div>
+  
     `;
     videosContainer.append(card);
   });

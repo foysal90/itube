@@ -48,6 +48,22 @@
       ></section>
     </main>
 
+    <!-- modal -->
+    <!-- You can open the modal using ID.showModal() method -->
+    <button id="showModal" class="btn hidden" onclick="my_modal_3.showModal()">open modal</button>
+    <dialog id="my_modal_3" class="modal">
+      <div class="modal-box">
+        <form method="dialog">
+          <button
+            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          >
+            ✕
+          </button>
+        </form>
+       <div id="modal-content"></div>
+      </div>
+    </dialog>
+
     <script src="./scripts/ptube.js"></script>
   </body>
 </html>
