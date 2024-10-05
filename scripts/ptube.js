@@ -7,6 +7,24 @@ const loadCategories = () => {
     .catch((error) => console.log(error.message));
 };
 
+const loadSelectedCategory = (id) => {
+  fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+    .then((res) => res.json())
+    .then((data) => {
+      // Remove "active" class from all buttons
+      const allActiveBtns = document.querySelectorAll(".active");
+      allActiveBtns.forEach((btn) => {
+        btn.classList.remove("active");
+      });
+      // Add "active" class to the selected button
+      const activeBtn = document.getElementById(`btn-${id}`);
+
+      activeBtn.classList.add("active");
+      displayVideos(data.category);
+    })
+    .catch((error) => console.log(error));
+};
+
 //create videos category
 const loadVideos = () => {
   fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
@@ -26,25 +44,40 @@ const timeFormat = (time) => {
 // const timeFormat = (time) => {
 //     const years = Math.floor(time / (3600 * 24 * 365));
 //     let remainingTime = time % (3600 * 24 * 365);
-    
+
 //     const months = Math.floor(remainingTime / (3600 * 24 * 30));
 //     remainingTime %= (3600 * 24 * 30);
-    
+
 //     const days = Math.floor(remainingTime / (3600 * 24));
 //     remainingTime %= (3600 * 24);
-    
+
 //     const hours = Math.floor(remainingTime / 3600);
 //     remainingTime %= 3600;
-    
+
 //     const minutes = Math.floor(remainingTime / 60);
 //     const seconds = remainingTime % 60;
-  
+
 //     return `${years} year ${months} month ${days} day ${hours} hour ${minutes} minute ${seconds} second ago`;
 //   };
 
 //display video
 const displayVideos = (videos) => {
   const videosContainer = document.getElementById("videos");
+  videosContainer.innerHTML = "";
+  if (videos.length == 0) {
+    videosContainer.classList.remove("grid");
+    videosContainer.innerHTML = `
+     <div class="min-h-[300px] flex flex-col gap-5 justify-center items-center">
+     <img  src="./assets/Icon.png" alt="data">
+     <h2 class="text-5xl font-bold italic text-red-500">No Content Found</h2>
+    
+     </div>
+    `;
+    return;
+  } else {
+    videosContainer.classList.add("grid");
+  }
+
   videos.forEach((video) => {
     console.log(video);
     const card = document.createElement("div");
@@ -59,7 +92,7 @@ const displayVideos = (videos) => {
         video.others.posted_date?.length == 0
           ? ""
           : `
-         <span class='absolute  bg-black rounded p-1 m-1 text-white bottom-2 right-2'>${timeFormat(
+         <span class='absolute text-xs  bg-black rounded p-1 m-1 text-white bottom-2 right-2'>${timeFormat(
            video.others.posted_date
          )}</span> 
         `
@@ -103,12 +136,16 @@ const displayCategories = (data) => {
   data.forEach((item) => {
     // create a button for each item
     const button = document.createElement("button");
-    button.classList = "btn";
+    button.classList = "btn category-btn";
     button.innerText = item.category;
+    button.id = `btn-${item.category_id}`;
+    button.onclick = () => {
+      loadSelectedCategory(item.category_id);
+    };
     //add button to category container
     categoryContainer.append(button);
-    button.style.backgroundColor = "purple";
-    button.style.color = "white";
+    // button.style.backgroundColor = "#451a03";
+    // button.style.color = "white";
   });
 };
 
